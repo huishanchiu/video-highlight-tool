@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# **Video Highlight Tool**
 
-## Getting Started
+### Frontend Framework
 
-First, run the development server:
+**React + Next**: Although this app currently doesn't connect to a backend, I chose Next.js because it allows for future scalability with features like Server-Side Rendering (SSR), which can improve both SEO and user experience.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**TypeScript**: By defining types with TypeScript, the code becomes more readable and maintainable.
+
+**Tailwind CSS**: Used for utility-first styling and significantly reducing the final CSS bundle size.
+
+**React Hooks**: For component state management and side effects.
+
+### Component Structure
+
+```javascript
+src/
+├── components/
+│   ├── TranscriptEditor
+│   ├── VideoEditor         
+│   ├── VideoPreview  
+│   └── VideoUploader    
+├── mock/             
+├── utils/          
+└── types/              
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### VideoUploader 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Implemented image upload functionality using the HTML File API.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- The default file input element is hidden, and a custom button is used to trigger the file upload action via `useRef` and a programmatic click on the input element.
 
-## Learn More
+### VideoPreview 
 
-To learn more about Next.js, take a look at the following resources:
+- Implemented video play and pause functionality using the native `<video />` element.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Enabled mouse interactions to allow users to scrub through the video by dragging.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### TranscriptEditor
 
-## Deploy on Vercel
+- Extracted the `formatTime` function for reuse.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Supports clicking on a timestamp to jump to the corresponding time in the video.

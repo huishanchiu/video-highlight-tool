@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import VideoUploader from "./VideoUpload";
 import TranscriptEditor from "./TranscriptEditor";
 import VideoPreview from "./VideoPreview";
@@ -17,18 +17,26 @@ export default function VideoEditor() {
   const [duration, setDuration] = useState(0);
   const SECTION_NUM = 3;
 
+  useEffect(() => {
+    const fetchTranscript = async () => {
+      if (duration > 0) {
+        try {
+          const response = await fetch(`/api/transcript?duration=${duration}`);
+          const data = await response.json();
+          setTranscriptData(data);
+          setSelectedSentences(data.suggestedHighlights);
+        } catch (error) {
+          console.error("Failed to fetch transcript:", error);
+        }
+      }
+    };
+
+    fetchTranscript();
+  }, [duration]);
+
   const handleVideoUpload = async (file: File) => {
     setVideoFile(file);
     setCurrentTime(0);
-
-    try {
-      const response = await fetch("/api/transcript");
-      const data = await response.json();
-      setTranscriptData(data);
-      setSelectedSentences(data.suggestedHighlights);
-    } catch (error) {
-      console.error("Failed to fetch transcript:", error);
-    }
   };
 
   if (!videoFile) {

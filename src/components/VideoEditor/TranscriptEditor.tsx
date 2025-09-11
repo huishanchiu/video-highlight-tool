@@ -30,7 +30,7 @@ export default function TranscriptEditor(props: Props) {
   return (
     <div className="bg-gray-200 p-4 text-white h-full ">
       <h2 className="text-2xl font-black mb-4 text-blue-950 ">Transcript</h2>
-      <div className="space-y-6">
+      <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-120px)] ">
         {transcriptData.sections.map((section) => {
           if (section.sentences[0].startTime > duration) return null;
           return (

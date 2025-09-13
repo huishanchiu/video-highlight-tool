@@ -4,7 +4,7 @@ type Props = {
   count: number;
 };
 
-const Skeleton = ({ count }: Props) => {
+const Loading = ({ count }: Props) => {
   const linesPerSection = 3;
 
   return (
@@ -28,4 +28,4 @@ const Skeleton = ({ count }: Props) => {
   );
 };
 
-export default Skeleton;
+export default Loading;

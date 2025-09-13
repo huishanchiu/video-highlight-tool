@@ -1,11 +1,12 @@
 import VideoEditor from "@/components/VideoEditor";
+import { VideoEditorProvider } from "@/context/videoEditor";
 
 export default function Home() {
   return (
     <div>
-      <main>
+      <VideoEditorProvider>
         <VideoEditor />
-      </main>
+      </VideoEditorProvider>
     </div>
   );
 }

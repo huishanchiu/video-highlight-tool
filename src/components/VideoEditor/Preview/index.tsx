@@ -3,27 +3,24 @@
 import { useRef, useState, useEffect } from "react";
 import { TranscriptData } from "@/types/transcript";
 import VideoControls from "./VideoControls";
+import VideoProgress from "./VideoProgress";
+import getCurrentSentence from "@/utils/getCurrentSentence";
+import { useVideoEditor } from "@/context/videoEditor";
 
 interface Props {
   videoFile: File;
-  transcriptData: TranscriptData | null;
-  selectedSentences: number[];
-  currentTime: number;
-  setCurrentTime: (time: number) => void;
-  setDuration: (time: number) => void;
-  duration: number;
 }
 
 export default function VideoPreview(props: Props) {
+  const { videoFile } = props;
   const {
-    videoFile,
     transcriptData,
-    selectedSentences,
+    duration,
+    setDuration,
+    selectedSentencesID,
     setCurrentTime,
     currentTime,
-    setDuration,
-    duration,
-  } = props;
+  } = useVideoEditor();
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -70,23 +67,18 @@ export default function VideoPreview(props: Props) {
     }
   };
 
-  const getCurrentSentence = () => {
-    if (!transcriptData) return null;
-
-    for (const section of transcriptData.sections) {
-      for (const sentence of section.sentences) {
-        if (
-          currentTime >= sentence.startTime &&
-          currentTime <= sentence.endTime &&
-          selectedSentences.includes(sentence.id)
-        ) {
-          return sentence;
-        }
-      }
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    if (isDragging) return;
+    if (Math.abs(el.currentTime - currentTime) > 0.1) {
+      el.currentTime = Math.max(0, Math.min(currentTime, duration || 0));
     }
-    return null;
-  };
+  }, [currentTime, duration, isDragging]);
 
+  /**
+   progress bar handlers
+  */
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (progressRef.current && videoRef.current) {
       const rect = progressRef.current.getBoundingClientRect();
@@ -130,23 +122,15 @@ export default function VideoPreview(props: Props) {
       seekToTime(newTime);
     }
   };
-
-  useEffect(() => {
-    const el = videoRef.current;
-    if (!el) return;
-    if (isDragging) return;
-    if (Math.abs(el.currentTime - currentTime) > 0.1) {
-      el.currentTime = Math.max(0, Math.min(currentTime, duration || 0));
-    }
-  }, [currentTime, duration, isDragging]);
-
+  /**
+   progress bar handlers
+  */
   return (
     <>
       {videoUrl && (
-        <div className="bg-gray-800  p-4 h-full">
+        <div className="bg-gray-800  p-4 h-full" id="video-preview">
           <h2 className="text-xl font-semibold mb-4 text-white">Preview</h2>
           <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
-            {/* video & transcript */}
             <video
               ref={videoRef}
               src={videoUrl}
@@ -155,16 +139,21 @@ export default function VideoPreview(props: Props) {
               onLoadedMetadata={handleLoadedMetadata}
               onEnded={() => setIsPlaying(false)}
             />
-            {transcriptData && getCurrentSentence() && (
+            {transcriptData && (
               <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-4">
                 <p className="text-white text-center text-lg">
-                  {getCurrentSentence()?.text}
+                  {
+                    getCurrentSentence(
+                      transcriptData,
+                      currentTime,
+                      selectedSentencesID
+                    )?.text
+                  }
                 </p>
               </div>
             )}
           </div>
           <div className="mt-4 space-y-4">
-            {/* video controls */}
             <VideoControls
               seekToTime={seekToTime}
               stepSeconds={5}
@@ -173,56 +162,18 @@ export default function VideoPreview(props: Props) {
               isPlaying={isPlaying}
               currentTime={currentTime}
             />
-            <div
-              ref={progressRef}
-              className="h-2 bg-gray-700 rounded relative cursor-pointer"
-              onClick={handleProgressClick}
-              onMouseDown={handleProgressDragStart}
-              onMouseMove={handleProgressDrag}
-              onMouseUp={handleProgressDragEnd}
-              onMouseLeave={handleProgressDragEnd}
-              onTouchStart={handleProgressDragStart}
-              onTouchMove={handleProgressTouchDrag}
-              onTouchEnd={handleProgressDragEnd}
-            >
-              <div
-                className="absolute h-full bg-amber-400 rounded "
-                style={{
-                  width: `${duration ? (currentTime / duration) * 100 : 0}%`,
-                }}
-              >
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-amber-500 rounded-full shadow-lg transform translate-x-1/2 z-10" />
-              </div>
-              {selectedSentences.map((id) => {
-                const sentence = transcriptData?.sections
-                  .flatMap((section) => section.sentences)
-                  .find(
-                    (sentence) =>
-                      sentence.id === id && sentence.startTime <= duration
-                  );
-                if (sentence) {
-                  const endTime =
-                    sentence.endTime <= duration ? sentence.endTime : duration;
-                  return (
-                    <div
-                      key={id}
-                      className="absolute h-full bg-blue-500 opacity-60"
-                      style={{
-                        left: `${
-                          duration ? (sentence.startTime / duration) * 100 : 0
-                        }%`,
-                        width: `${
-                          duration
-                            ? ((endTime - sentence.startTime) / duration) * 100
-                            : 0
-                        }%`,
-                      }}
-                    />
-                  );
-                }
-                return null;
-              })}
-            </div>
+            <VideoProgress
+              progressRef={progressRef}
+              handleProgressClick={handleProgressClick}
+              handleProgressDragStart={handleProgressDragStart}
+              handleProgressDrag={handleProgressDrag}
+              handleProgressDragEnd={handleProgressDragEnd}
+              handleProgressTouchDrag={handleProgressTouchDrag}
+              currentTime={currentTime}
+              duration={duration}
+              selectedSentencesID={selectedSentencesID}
+              transcriptData={transcriptData}
+            />
           </div>
         </div>
       )}

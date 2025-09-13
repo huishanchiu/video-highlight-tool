@@ -30,7 +30,7 @@ const VideoProgress = (props: Props) => {
   return (
     <div
       ref={progressRef}
-      className="h-2 bg-gray-700 rounded relative cursor-pointer"
+      className="h-1.5 sm:h-2 md:h-2.5 bg-gray-700 rounded relative cursor-pointer touch-none"
       onClick={handleProgressClick}
       onMouseDown={handleProgressDragStart}
       onMouseMove={handleProgressDrag}
@@ -41,12 +41,12 @@ const VideoProgress = (props: Props) => {
       onTouchEnd={handleProgressDragEnd}
     >
       <div
-        className="absolute h-full bg-amber-400 rounded "
+        className="absolute h-full bg-amber-400 rounded"
         style={{
           width: `${duration ? (currentTime / duration) * 100 : 0}%`,
         }}
       >
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-amber-500 rounded-full shadow-lg transform translate-x-1/2 z-10" />
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 bg-amber-500 rounded-full shadow-lg transform translate-x-1/2 z-10" />
       </div>
       {selectedSentencesID.map((id) => {
         const sentence = transcriptData?.sections

@@ -67,24 +67,6 @@ export default function VideoPreview(props: Props) {
     }
   };
 
-  // const getCurrentSentence = () => {
-  //   if (!transcriptData) return null;
-
-  //   for (const section of transcriptData.sections) {
-  //     for (const sentence of section.sentences) {
-  //       console.log("sentence", sentence, "currentTime", currentTime);
-  //       if (
-  //         currentTime >= sentence.startTime &&
-  //         currentTime <= sentence.endTime &&
-  //         selectedSentencesID.includes(sentence.id)
-  //       ) {
-  //         return sentence;
-  //       }
-  //     }
-  //   }
-  //   return null;
-  // };
-
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
@@ -146,7 +128,7 @@ export default function VideoPreview(props: Props) {
   return (
     <>
       {videoUrl && (
-        <div className="bg-gray-800  p-4 h-full">
+        <div className="bg-gray-800  p-4 h-full" id="video-preview">
           <h2 className="text-xl font-semibold mb-4 text-white">Preview</h2>
           <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
             <video

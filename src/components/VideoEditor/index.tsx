@@ -50,16 +50,16 @@ export default function VideoEditor() {
   }
 
   return (
-    <div className="flex h-screen">
-      <div className="w-1/2">
+    <div className="flex flex-col lg:flex-row h-screen">
+      <div className="w-full lg:w-1/2 h-1/2 lg:h-full order-1 lg:order-2">
+        <VideoPreview videoFile={videoFile} />
+      </div>
+      <div className="w-full lg:w-1/2 h-1/2 lg:h-full order-2 lg:order-1">
         {transcriptData ? (
           <TranscriptEditor />
         ) : (
           <Skeleton count={SECTION_NUM} />
         )}
-      </div>
-      <div className="w-1/2">
-        <VideoPreview videoFile={videoFile} />
       </div>
     </div>
   );

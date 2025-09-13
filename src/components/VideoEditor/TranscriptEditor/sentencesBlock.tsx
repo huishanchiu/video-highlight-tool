@@ -1,34 +1,16 @@
 import { useVideoEditor } from "@/context/videoEditor";
 import { Sentence } from "@/types/transcript";
 import formatTime from "@/utils/formatTime";
-import getCurrentSentence from "@/utils/getCurrentSentence";
-import { useMemo } from "react";
 
 type Props = {
   sentences: Sentence[];
+  activeId: number | null;
 };
 
 const SentencesBlock = (props: Props) => {
-  const { sentences } = props;
-  const {
-    selectedSentencesID,
-    setCurrentTime,
-    duration,
-    toggleSentence,
-    transcriptData,
-    currentTime,
-  } = useVideoEditor();
-
-  const activeId = useMemo(() => {
-    if (!transcriptData) return null;
-    const hit = getCurrentSentence(
-      transcriptData,
-      currentTime,
-      selectedSentencesID
-    );
-
-    return hit ? hit.id : null;
-  }, [transcriptData, currentTime, selectedSentencesID]);
+  const { sentences, activeId } = props;
+  const { selectedSentencesID, setCurrentTime, duration, toggleSentence } =
+    useVideoEditor();
 
   return (
     <div className="mt-2 rounded ">

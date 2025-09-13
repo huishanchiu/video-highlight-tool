@@ -27,12 +27,16 @@ export default function TranscriptEditor() {
       `[data-sent-id="${activeId}"]`
     );
 
-    if (!el) return;
+    const videoPreviewEl = document.getElementById("video-preview");
+
+    if (!el || !videoPreviewEl) return;
 
     // 計算元素相對於容器的位置
     const elTop = el.offsetTop;
-    // 設定距離視窗頂部100px的滾動位置
-    const targetScrollTop = elTop - 100;
+    // 根據螢幕大小調整距離頂部的間距
+    const isMobile = window.innerWidth < 1024;
+    const topOffset = isMobile ? videoPreviewEl.clientHeight + 60 : 100;
+    const targetScrollTop = elTop - topOffset;
 
     containerRef.current.scrollTo({
       top: Math.max(0, targetScrollTop),
@@ -64,7 +68,10 @@ export default function TranscriptEditor() {
                 {section.title}
               </h3>
               {/* sentences-block */}
-              <SentencesBlock sentences={section.sentences} />
+              <SentencesBlock
+                sentences={section.sentences}
+                activeId={activeId}
+              />
             </div>
           );
         })}

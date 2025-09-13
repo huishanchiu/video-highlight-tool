@@ -5,7 +5,7 @@ type Props = {
   selectedSentencesID: number[];
   duration: number;
   currentTime: number;
-  progressRef: any;
+  progressRef: React.RefObject<HTMLDivElement | null>;
   handleProgressClick: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleProgressDragStart: () => void;
   handleProgressDrag: (e: React.MouseEvent<HTMLDivElement>) => void;

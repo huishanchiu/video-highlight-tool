@@ -1,20 +1,22 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useEffect } from "react";
 import VideoUploader from "./VideoUpload";
 import TranscriptEditor from "./TranscriptEditor";
-import VideoPreview from "./VideoPreview";
-import { TranscriptData } from "@/types/transcript";
-import Skeleton from "../Common/Skeleton";
+import VideoPreview from "./Preview";
+import Skeleton from "../Common/Loading";
+import { useVideoEditor } from "@/context/videoEditor";
 
 export default function VideoEditor() {
-  const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [transcriptData, setTranscriptData] = useState<TranscriptData | null>(
-    null
-  );
-  const [selectedSentences, setSelectedSentences] = useState<number[]>([]);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const {
+    videoFile,
+    setVideoFile,
+    transcriptData,
+    setTranscriptData,
+    setSelectedSentencesID,
+    setCurrentTime,
+    duration,
+  } = useVideoEditor();
   const SECTION_NUM = 3;
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function VideoEditor() {
           const response = await fetch(`/api/transcript?duration=${duration}`);
           const data = await response.json();
           setTranscriptData(data);
-          setSelectedSentences(data.suggestedHighlights);
+          setSelectedSentencesID(data.suggestedHighlights);
         } catch (error) {
           console.error("Failed to fetch transcript:", error);
         }
@@ -51,27 +53,13 @@ export default function VideoEditor() {
     <div className="flex h-screen">
       <div className="w-1/2">
         {transcriptData ? (
-          <TranscriptEditor
-            transcriptData={transcriptData}
-            selectedSentences={selectedSentences}
-            duration={duration}
-            onSelectionChange={setSelectedSentences}
-            onTimeClick={setCurrentTime}
-          />
+          <TranscriptEditor />
         ) : (
           <Skeleton count={SECTION_NUM} />
         )}
       </div>
       <div className="w-1/2">
-        <VideoPreview
-          videoFile={videoFile}
-          duration={duration}
-          currentTime={currentTime}
-          transcriptData={transcriptData}
-          selectedSentences={selectedSentences}
-          setCurrentTime={setCurrentTime}
-          setDuration={setDuration}
-        />
+        <VideoPreview videoFile={videoFile} />
       </div>
     </div>
   );

@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Video Highlight Tool
 
-First, run the development server:
+A modern web application for video editing and transcript management, built with Next.js and TypeScript. This tool allows users to upload videos, generate transcripts, and create highlight clips with synchronized text editing capabilities.
+## 🚀 Demo
+https://video-highlight-tool-eight.vercel.app/
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Features
+
+- **Video Upload & Preview**: Support for various video formats with real-time preview
+- **Automatic Transcript Generation**: AI-powered transcript generation based on video duration
+- **Interactive Timeline**: Navigate through video content with precise time controls
+- **Synchronized Text Editing**: Real-time synchronization between video playback and transcript
+- **Sentence-Level Navigation**: Jump to specific parts of the video by clicking transcript sentences
+- **Mobile Responsive**: Optimized for both desktop and mobile devices
+- **Smooth Scrolling**: Auto-scroll transcript to follow video progress
+
+## 🚀 Tech Stack
+
+- **React + Next.js**: Future scalability with features like Server-Side Rendering (SSR), API routes, and enhanced performance optimizations that can improve both SEO and user experience.
+- **TypeScript**: By defining types with TypeScript, the code becomes more readable, maintainable, and helps catch potential errors at compile time. All components and utilities are strongly typed.
+- **Tailwind CSS**: Used for utility-first styling and significantly reducing the final CSS bundle size. Tailwind CSS v4 provides better performance and developer experience.
+- **React Context API**: Implemented centralized state management for video editor functionality, eliminating prop drilling and providing clean state sharing across components.
+
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── api/transcript/          # API routes for transcript generation
+│   ├── layout.tsx               # Root layout component
+│   └── page.tsx                 # Main application page
+├── components/
+│   └── VideoEditor/
+│       ├── index.tsx            # Main video editor container
+│       ├── Preview/             # Video preview components
+│       └── TranscriptEditor/    # Transcript editing components
+├── context/
+│   └── videoEditor.tsx          # Video editor context provider
+├── types/
+│   └── transcript.ts            # TypeScript type definitions
+└── utils/
+    ├── formatTime.ts            # Time formatting utilities
+    └── getCurrentSentence.ts    # Sentence navigation logic
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎯 Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Upload Video**: Select and upload a video file through the interface
+2. **Generate Transcript**: The system automatically generates a transcript based on video duration
+3. **Navigate Content**: Click on any sentence in the transcript to jump to that moment in the video
+4. **Edit Transcript**: Make real-time edits to the transcript content
+5. **Create Highlights**: Select specific sections to create highlight clips
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📝 API Routes
 
-## Learn More
+- `GET/POST /api/transcript` - Handle transcript generation and management
 
-To learn more about Next.js, take a look at the following resources:
+## 🌟 Key Components
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **VideoEditor**: Main container managing video playback and transcript editing
+- **VideoPreview**: Handles video display, controls, and timeline
+- **TranscriptEditor**: Manages transcript display and interactive sentence navigation
+- **VideoControls**: Provides play/pause, seek, and timeline controls
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
